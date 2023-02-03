@@ -1,3 +1,4 @@
+from colorama import Fore, Style
 import locations.pluto
 import locations.uranus
 import locations.uranus_shop
@@ -15,6 +16,8 @@ class Gamestate:
         self.index = [2, 1]
         self.row = self.rows[self.index[1]]
         self.letter = self.row[self.index[0]]
+        self.options = {}
+        self.option = ""
 
         self.location = None
         self.inventory = ['strawberry ice cream']
@@ -22,6 +25,7 @@ class Gamestate:
         self.beans = 0
         self.player_name = input("Enter a name for your player: ")
         self.has_rock_friend = False
+
 
     def inventory_string(self):
         s = 'Items: \n'
@@ -56,45 +60,54 @@ class Gamestate:
 
     def update_victory(self, victory):
         self.victory = victory
+    
+    def draw_small_border(self):
+        print(Fore.BLACK + '-'*50 + Fore.WHITE)
+    
+    def draw_large_border(self):
+        print(Fore.CYAN + "\n" + '-'*50)
+        print('*'*50)
+        print('-'*50 + "\n" + Fore.WHITE)
 
-    def get_option(self, options):
-        option = None
-        while option not in options.keys():
-            print('Your options are:')
-            for key, value in options.items():
-                print('Type ' + key.upper() + ' to ' + value[0])
-            print("-" * 40)
-            option = input('What is your selection? ').lower()
-        return option
+    def draw_options(self):
+        print('Your options are:')
+        for key, value in self.options.items():
+            print('Type ' + key.upper() + ' to ' + value[0])
+
 
     def draw(self):
+        self.draw_large_border()
+
+        if self.option in self.options:
+            print(self.options[self.option][2])
+        
         self.location.draw()
-        print("-" * 40)
+        self.draw_small_border()
         print(self.inventory_string())
+        self.draw_small_border()
+        self.draw_options()
+
+        self.draw_large_border()
 
     def use_teleporter(self):
         self.move_to(locations.pluto.Pluto(self))
         self.remove_item('teleporter')
 
-    def get_option_letter(self, options):
-        option = None
-        while option not in options.keys():
-            print('Nearby Letters: ')
-            for key, value in options.items():
-                print('' + '' + value[0])
-            option = input('What is your selection? ').lower()
-        return option
-
     def update(self):
-        options = self.location.update()
+        self.options = self.location.update()
+
         if 'teleporter' in self.inventory:
-            options['teleport'] = ('use the teleporter.',
+            self.options['teleport'] = ('use the teleporter.',
                                    self.use_teleporter,
                                    'The teleporter took you to Pluto and exploded!')
-        print("-" * 40)
-        option = self.get_option(options)
-        print('\n'*10)
-        options[option][1]()
-        print(options[option][2])
+        
         if 'L' in self.inventory:
             self.update_victory(1)
+
+    def execute_input(self):
+        self.option = None
+        while self.option not in self.options.keys():
+            self.option = input('What is your selection? ').lower()
+            self.draw()
+        
+        self.options[self.option][1]()

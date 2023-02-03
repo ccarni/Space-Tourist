@@ -10,13 +10,12 @@ def get_new_state():
 state = get_new_state()
 
 while state.victory == 0:
-    state.draw()
     state.update()
+    state.draw()
+    state.execute_input()
 
 if state.victory == 1:
     print('Nice job, you won.')
-    state = get_new_state()
 elif state.victory == -1:
     print('You lost, rip.')
-    state = get_new_state()
 

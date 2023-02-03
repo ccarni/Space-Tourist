@@ -36,6 +36,6 @@ class Crashsite(locations.location.Location):
                     self.state.update_victory(-1)
 
             options['wait'] = ('wait for rescue.',
-                               alien_abduction(),
+                               alien_abduction,
                                '')
         return options

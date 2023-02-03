@@ -4,9 +4,16 @@ Explore planets, go through mazes, mine ice, eat ice cream, befriend a rock, and
 
 NOTE: Currently there are multiple bugs.
 
-
 # Setup
 
 - Install Python
 - Download the repo
-- Run main.py in a terminal
+- Run this command in the terminal where you installed the repo
+
+~~~bash
+
+pip install -r requirements.txt
+
+~~~
+
+- Run main.py
